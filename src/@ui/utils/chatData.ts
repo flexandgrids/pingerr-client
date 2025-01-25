@@ -1,0 +1,58 @@
+export const chatData = [
+  {
+    id: 1,
+    profilePic: "",
+    senderName: "Ali Warraich",
+    message: "This is a testing message",
+    recievedOn: "2025-01-25GMT22:34:02",
+  },
+  {
+    id: 2,
+    profilePic: "",
+    senderName: "Ahmad Raza",
+    message: "This is a testing message",
+    recievedOn: "2025-01-25GMT22:34:02",
+  },
+  {
+    id: 3,
+    profilePic: "",
+    senderName: "Atif Nadeem",
+    message: "This is a testing message",
+    recievedOn: "2025-01-25GMT22:34:02",
+  },
+  {
+    id: 4,
+    profilePic: "",
+    senderName: "Amna Masroof",
+    message: "This is a testing message",
+    recievedOn: "2025-01-25GMT22:34:02",
+  },
+  {
+    id: 5,
+    profilePic: "",
+    senderName: "Sharjeel Hussain",
+    message: "This is a testing message",
+    recievedOn: "2025-01-25GMT22:34:02",
+  },
+  {
+    id: 6,
+    profilePic: "",
+    senderName: "Samad Babar",
+    message: "This is a testing message",
+    recievedOn: "2025-01-25GMT22:34:02",
+  },
+  {
+    id: 7,
+    profilePic: "",
+    senderName: "Umar Hotani",
+    message: "This is a testing message",
+    recievedOn: "2025-01-25GMT22:34:02",
+  },
+  {
+    id: 8,
+    profilePic: "",
+    senderName: "Bilal Khattak",
+    message: "This is a testing message",
+    recievedOn: "2025-01-25GMT22:34:02",
+  },
+];

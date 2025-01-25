@@ -1,0 +1,24 @@
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* For Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  border-radius: 20px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #faf9f8;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #ececec; /* Tailwind's blue-500 */
+  border-radius: 9999px;
+}
