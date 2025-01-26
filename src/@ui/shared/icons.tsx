@@ -28,6 +28,10 @@ import {
   TbMicrophone,
   TbSend,
   TbCirclePlus,
+  TbPlus,
+  TbMessageCirclePlus,
+  TbCode,
+  TbLogout2,
 } from "react-icons/tb";
 
 export const Icons = {
@@ -47,11 +51,15 @@ export const Icons = {
   mic: TbMicrophone,
   magic: BsMagic,
   criclePlus: TbCirclePlus,
-  logout: BsPower,
+  // logout: BsPower,
   messageSend: TbSend,
   callSent: BsTelephoneForward,
   callRecieved: BsTelephoneInbound,
   missedCall: BsTelephoneMinus,
   clip: TbPaperclip,
   selectImage: TbPhoto,
+  plus: TbPlus,
+  newChat: TbMessageCirclePlus,
+  code: TbCode,
+  logout: TbLogout2,
 };

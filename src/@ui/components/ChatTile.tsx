@@ -1,5 +1,6 @@
 import { Icons } from "../shared/icons";
 import { chatData } from "../utils/chatData";
+import userIcon from "../../assets/user-icon.svg";
 
 const ChatTile = () => {
   return (
@@ -8,9 +9,11 @@ const ChatTile = () => {
         chatData.map((chat, index) => (
           <div
             key={index}
-            className="w-full cursor-pointer mb-2 gap-1 h-[60px] rounded-lg bg-gray-100 flex justify-between items-center p-2"
+            className="w-full cursor-pointer mb-2 gap-1 h-[60px] rounded-lg bg-gray-50 shadow-sm flex justify-between items-center p-2"
           >
-            <div className="h-8 w-8 rounded-full bg-gray-200"></div>
+            <div className="h-8 w-8 rounded-full bg-gray-200">
+              <img src={userIcon} alt="user" className="rounded-full" />
+            </div>
             <div className="flex flex-col h-auto w-[80%]">
               <h1 className="text-sm font-semibold">{chat.senderName}</h1>
               <p className="text-xs font-normal text-[#767676]">
