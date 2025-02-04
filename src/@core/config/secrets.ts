@@ -1,0 +1,3 @@
+export const gptKey =
+  "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";
+export const geminiKey = "AIzaSyAFqr-Zizrj9X2vQ_dD-HqWDQjKVBdNfnQ";

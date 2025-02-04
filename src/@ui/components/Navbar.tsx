@@ -1,7 +1,5 @@
-import React from "react";
 import { Icons } from "../shared/icons";
 import logo from "../../assets/pingerr-logo.png";
-import { svgIcons } from "@/assets/svg.icons/svg.icons";
 import userIcon from "../../assets/user-icon.svg";
 
 const Navbar = () => {
