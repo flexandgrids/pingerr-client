@@ -2,7 +2,15 @@ import { Icons } from "../shared/icons";
 import { chatData } from "../utils/chatData";
 import userIcon from "../../assets/user-icon.svg";
 
-const ChatTile = () => {
+interface ChatTileProps {
+  onSelectChat: (chat: {
+    id: string;
+    senderName: string;
+    message: string;
+  }) => void;
+}
+
+const ChatTile: React.FC<ChatTileProps> = ({ onSelectChat }) => {
   return (
     <>
       {chatData.length > 0 ? (
@@ -10,6 +18,13 @@ const ChatTile = () => {
           <div
             key={index}
             className="w-full cursor-pointer mb-2 gap-1 h-[60px] rounded-lg bg-gray-50 shadow-sm flex justify-between items-center p-2"
+            onClick={() =>
+              onSelectChat({
+                id: chat.id.toString(),
+                senderName: chat.senderName,
+                message: chat.message,
+              })
+            }
           >
             <div className="h-8 w-8 rounded-full bg-gray-200">
               <img src={userIcon} alt="user" className="rounded-full" />
