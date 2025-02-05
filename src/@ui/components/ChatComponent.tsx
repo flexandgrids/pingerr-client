@@ -1,8 +1,12 @@
 import { useState, useEffect, useRef } from "react";
+import { OpenAI } from "openai"; // ✅ Correct Import for OpenAI SDK
 import { Icons } from "../shared/icons";
-import { chatData } from "../utils/chatData"; // Assuming this contains chat history
+import { chatData } from "../utils/chatData";
 import axios from "axios";
-import { geminiKey, gptKey } from "@/@core/config/secrets";
+import { geminiKey, openAiKey } from "@/@core/config/secrets";
+import { formatText } from "../utils/textFormatter";
+import { users } from "../utils/dummyUsers";
+import { svgIcons } from "@/assets/svg.icons/svg.icons";
 
 interface ChatComponentProps {
   chatId: string | number;
@@ -17,25 +21,19 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ chatId, isAI }) => {
       message: string;
       sentOn: string;
       deliveredOn: string;
+      image?: string;
     }[]
   >([]);
   const [inputMessage, setInputMessage] = useState("");
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // const [messages, setMessages] = useState<MessageType[]>([]);
-  const messagesEndRef = useRef<HTMLDivElement>(null); // Reference to last message
-
-  // Auto-scroll to the latest message whenever `messages` updates
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   useEffect(() => {
     if (!isAI) {
-      // Fetch existing user chat messages
       const chatHistory = chatData.find((chat) => chat.id === chatId);
-      if (chatHistory) {
-        // setMessages();
-      }
     } else {
       setMessages([]);
     }
@@ -44,10 +42,9 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ chatId, isAI }) => {
   const handleSendMessage = async () => {
     if (!inputMessage.trim()) return;
 
-    // Append user message to chat
     const newMessage = {
       msgId: Date.now().toString(),
-      senderId: 2, // 2 represents the current user
+      senderId: 2,
       message: inputMessage,
       sentOn: new Date().toISOString(),
       deliveredOn: "",
@@ -58,36 +55,67 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ chatId, isAI }) => {
 
     if (isAI) {
       try {
-        console.log("Sending request to Gemini AI...");
+        let aiMessageContent = "AI did not respond.";
+        let imageUrl = null;
 
-        const response = await axios.post(
-          `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`,
+        // **Detect if User Wants an Image**
+        // if (
+        //   inputMessage.toLowerCase().startsWith("show me") ||
+        //   inputMessage.toLowerCase().startsWith("generate an image")
+        // ) {
+        //   console.log("📷 Requesting AI-generated image from OpenAI DALL·E...");
+
+        //   // **OpenAI DALL·E Image Generation**
+        //   const openai = new OpenAI({
+        //     apiKey: openAiKey,
+        //     dangerouslyAllowBrowser: true,
+        //   });
+
+        //   const numberOfImages = 1;
+        //   const imageSize = "1024x1024";
+
+        //   const imageResponse = await openai.images.generate({
+        //     model: "dall-e-3",
+        //     prompt: inputMessage,
+        //     n: numberOfImages,
+        //     size: imageSize,
+        //   });
+
+        //   console.log("✅ AI Image Response:", imageResponse);
+
+        //   // **Extract Image URL**
+        //   if (imageResponse.data.length > 0) {
+        //     imageUrl = imageResponse.data[0].url;
+        //   }
+
+        //   aiMessageContent = "Here is your AI-generated image:";
+        // } else {
+        // console.log("💬 Requesting Gemini AI text response...");
+
+        // **Google Gemini AI Text Generation**
+        const textResponse = await axios.post(
+          `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${geminiKey}`,
           {
-            contents: [
-              {
-                role: "user",
-                parts: [{ text: inputMessage }],
-              },
-            ],
+            contents: [{ role: "user", parts: [{ text: inputMessage }] }],
           },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
+          { headers: { "Content-Type": "application/json" } }
         );
 
-        console.log("Response:", response.data); // Debugging API response
+        const aiContent =
+          textResponse.data.candidates?.[0]?.content?.parts || [];
+        aiContent.forEach((part: any) => {
+          if (part.text) {
+            aiMessageContent = part.text;
+          }
+        });
+        // }
 
-        // Extract AI response correctly
-        const aiMessageContent =
-          response.data.candidates?.[0]?.content?.parts?.[0]?.text ||
-          "AI did not respond.";
-
+        // **Store AI Response**
         const aiMessage = {
           msgId: Date.now().toString() + "-ai",
-          senderId: 1, // AI sender
+          senderId: 1,
           message: aiMessageContent,
+          image: imageUrl || undefined,
           sentOn: new Date().toISOString(),
           deliveredOn: "",
         };
@@ -95,11 +123,10 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ chatId, isAI }) => {
         setMessages((prevMessages) => [...prevMessages, aiMessage]);
       } catch (error: any) {
         console.error(
-          "Error fetching AI response:",
+          "❌ Error fetching AI response:",
           error.response?.data || error.message
         );
 
-        // Error message in chat UI
         setMessages((prevMessages) => [
           ...prevMessages,
           {
@@ -117,7 +144,6 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ chatId, isAI }) => {
   return (
     <div className="flex flex-col justify-start gap-3">
       <div className="h-[610px] flex flex-col">
-        {/* Chat Messages */}
         <div className="flex flex-col max-h-[100%] overflow-y-scroll rounded-lg h-auto flex-grow custom-scrollbar p-3">
           {messages.map((message) => (
             <div
@@ -129,35 +155,51 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ chatId, isAI }) => {
               } mb-1 flex items-end`}
             >
               <div className="max-w-[300px] flex flex-col items-start justify-start text-sm p-3 rounded-lg break-words">
-                <span
-                  className={`${
-                    message.senderId === 1
-                      ? "bg-white text-black"
-                      : "bg-gray-200 text-black"
-                  } px-3 py-2 rounded-xl`}
-                >
-                  {message.message}
-                </span>
-                <span
-                  className={`text-[10px] flex items-center w-full text-[#767676] ${
-                    message.senderId === 1 ? "justify-start" : "justify-end"
-                  }`}
-                >
-                  {new Date(message.sentOn).toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                  {message.senderId === 1 ? (
-                    ""
-                  ) : (
-                    <Icons.sent className="text-[15px] ml-1" />
+                <div className="flex items-end w-full gap-1">
+                  {chatId === "ai" && message.senderId !== 2 && (
+                    <span className="min-w-4 h-4 mb-1">{svgIcons.aiIcon}</span>
                   )}
-                </span>
+                  <span
+                    className={`${
+                      message.senderId === 1
+                        ? "bg-white text-black"
+                        : "bg-gray-200 text-black"
+                    } px-3 py-2 rounded-xl`}
+                  >
+                    {formatText(message.message)}
+                  </span>
+                </div>
+
+                {/* **Display Image if Available** */}
+                {message.image && (
+                  <img
+                    src={message.image}
+                    alt="AI Generated"
+                    className="w-full rounded-md mt-2"
+                  />
+                )}
+
+                {chatId !== "ai" && (
+                  <span
+                    className={`text-[10px] flex items-center w-full text-[#767676] ${
+                      message.senderId === 1 ? "justify-start" : "justify-end"
+                    }`}
+                  >
+                    {new Date(message.sentOn).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                    {message.senderId === 1 ? (
+                      ""
+                    ) : (
+                      <Icons.sent className="text-[15px] ml-1" />
+                    )}
+                  </span>
+                )}
               </div>
             </div>
           ))}
 
-          {/* Invisible div for auto-scrolling */}
           <div ref={messagesEndRef} />
         </div>
       </div>
@@ -173,25 +215,12 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ chatId, isAI }) => {
           placeholder="Write a message.."
           className="outline-none text-black text-sm w-full h-[40px] px-3"
         />
-        <div className="flex justify-between items-center gap-4">
-          {chatId !== "ai" && (
-            <>
-              <button>
-                <Icons.mic className="text-xl text-gray-600" />
-              </button>
-              <button>
-                <Icons.selectImage className="text-xl text-gray-600" />
-              </button>
-            </>
-          )}
-
-          <button
-            onClick={handleSendMessage}
-            className="p-3 bg-gray-100 rounded-lg"
-          >
-            <Icons.messageSend />
-          </button>
-        </div>
+        <button
+          onClick={handleSendMessage}
+          className="p-3 bg-gray-100 rounded-lg"
+        >
+          <Icons.messageSend />
+        </button>
       </div>
     </div>
   );

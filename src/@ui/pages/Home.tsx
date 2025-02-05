@@ -36,7 +36,7 @@ const Home = () => {
             <div
               className="w-full mb-2 gap-1 shadow-sm cursor-pointer h-[60px] rounded-lg border flex justify-between items-center p-2"
               onClick={() =>
-                setSelectedChat({ id: "ai", senderName: "Pingerr" })
+                setSelectedChat({ id: "ai", senderName: "Pingerr Bot" })
               }
             >
               <div className="h-8 w-8 rounded-full">{svgIcons.aiIcon}</div>
@@ -73,7 +73,9 @@ const Home = () => {
                     {selectedChat.senderName}
                   </h1>
                   {selectedChat.id === "ai" ? (
-                    <p className="text-xs text-blue-500">Bot</p>
+                    <p className="flex items-center gap-1 text-xs text-blue-500">
+                      Gemini <Icons.magic />
+                    </p>
                   ) : (
                     <p className="text-xs text-orange-500">away</p>
                   )}
