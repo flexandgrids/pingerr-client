@@ -154,7 +154,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ chatId, isAI }) => {
                   : "sent-msg justify-end"
               } mb-1 flex items-end`}
             >
-              <div className="max-w-[300px] flex flex-col items-start justify-start text-sm p-3 rounded-lg break-words">
+              <div className="max-w-[400px] flex flex-col items-start justify-start text-sm p-3 rounded-lg break-words">
                 <div className="flex items-end w-full gap-1">
                   {chatId === "ai" && message.senderId !== 2 && (
                     <span className="min-w-4 h-4 mb-1">{svgIcons.aiIcon}</span>
