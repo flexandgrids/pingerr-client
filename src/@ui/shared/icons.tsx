@@ -1,4 +1,3 @@
-import { FaRegBell } from "react-icons/fa6";
 import { GoBell } from "react-icons/go";
 import { FiZap } from "react-icons/fi";
 import { AiOutlineSend } from "react-icons/ai";
@@ -13,14 +12,11 @@ import {
   BsCameraVideo,
   BsThreeDotsVertical,
   BsLink45Deg,
-  BsMic,
   BsMagic,
-  BsPlusCircle,
-  BsPower,
-  BsSend,
   BsTelephoneForward,
   BsTelephoneInbound,
   BsTelephoneMinus,
+  BsChat,
 } from "react-icons/bs";
 import {
   TbPaperclip,
@@ -33,6 +29,17 @@ import {
   TbCode,
   TbLogout2,
 } from "react-icons/tb";
+import {
+  HiOutlineHome,
+  HiOutlineHeart,
+  HiHeart,
+  HiMiniArrowUturnRight,
+  HiMiniArrowTrendingUp,
+  HiMiniArrowTrendingDown,
+  HiMiniCheckBadge,
+  HiMiniHashtag,
+  HiXMark,
+} from "react-icons/hi2";
 
 export const Icons = {
   notification: GoBell,
@@ -51,7 +58,6 @@ export const Icons = {
   mic: TbMicrophone,
   magic: BsMagic,
   criclePlus: TbCirclePlus,
-  // logout: BsPower,
   messageSend: TbSend,
   callSent: BsTelephoneForward,
   callRecieved: BsTelephoneInbound,
@@ -62,4 +68,14 @@ export const Icons = {
   newChat: TbMessageCirclePlus,
   code: TbCode,
   logout: TbLogout2,
+  home: HiOutlineHome,
+  heart: HiOutlineHeart,
+  heartFilled: HiHeart,
+  share: HiMiniArrowUturnRight,
+  trending: HiMiniArrowTrendingUp,
+  downTrend: HiMiniArrowTrendingDown,
+  verified: HiMiniCheckBadge,
+  hashtag: HiMiniHashtag,
+  cross: HiXMark,
+  chat: BsChat,
 };
